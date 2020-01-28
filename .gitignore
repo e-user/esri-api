@@ -1,0 +1,5 @@
+/target
+/classes
+/resources/*.csv
+/.cpcache
+.nrepl-port

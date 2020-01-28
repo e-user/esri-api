@@ -1,0 +1,8 @@
+{:deps {org.clojure/data.csv {:mvn/version "0.1.4"}
+        metosin/reitit {:mvn/version "0.4.2"}
+        metosin/muuntaja {:mvn/version "0.6.6"}
+        ring/ring-jetty-adapter {:mvn/version "1.8.0"}
+        com.stuartsierra/component {:mvn/version "0.4.0"}
+        clojure.java-time {:mvn/version "0.3.2"}
+        org.clojure/tools.cli {:mvn/version "0.4.2"}}
+ :paths ["src" "resources" "classes"]}
