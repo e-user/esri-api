@@ -19,7 +19,7 @@ $(DEP_CLASSES): classes
 
 aot-compile: $(MAIN_CLASS) $(DEP_CLASSES) ## Perform ahead-of-time compilation
 
-target/esri-api.jar: init aot-compile
+target/esri-api.jar: resources aot-compile
 	@clj -Sdeps '{:deps {uberdeps {:mvn/version "0.1.8"}}}' -m uberdeps.uberjar --main-class $(MAIN_CLASS)
 
 uberjar: target/esri-api.jar ## Build uberjar file
@@ -27,4 +27,4 @@ uberjar: target/esri-api.jar ## Build uberjar file
 clean: ## Remove generated files
 	@rm -rf classes target
 
-.PHONY: resources init aot-compile uberjar clean $(MAIN_CLASS) $(DEP_CLASSES)
+.PHONY: resources init aot-compile uberjar clean classes $(MAIN_CLASS) $(DEP_CLASSES)
