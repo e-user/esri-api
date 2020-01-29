@@ -25,9 +25,12 @@ target/esri-api.jar: resources aot-compile
 uberjar: target/esri-api.jar ## Build uberjar file
 
 test: ## Run all tests
-	@clojure -A:test -m esri_api.test
+	@clj -A:test -m esri_api.test
+
+doc: ## Generate documentation in docs/uberdoc.html
+	@clj -Sdeps '{:deps {marginalia {:mvn/version "0.9.1"}}}' -m marginalia.main
 
 clean: ## Remove generated files
 	@rm -rf classes target
 
-.PHONY: resources init aot-compile uberjar clean classes $(MAIN_CLASS) $(DEP_CLASSES) test
+.PHONY: resources init aot-compile uberjar clean classes $(MAIN_CLASS) $(DEP_CLASSES) test doc

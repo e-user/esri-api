@@ -21,7 +21,14 @@ esri-api can be run both directly using [clj] or as a uberjar. To build the uber
 This requires having `curl` installed to fetch the dataset and a recent version
 of Clojure with [clj] on path, as well as a compatible JDK version.
 
+Optionally, documentation may be generated using
+
+    make doc
+
+Which created a [Marginalia] documentation file in `docs/uberdoc.html`.
+
 [clj]: https://clojure.org/guides/deps_and_cli
+[Marginalia]: https://github.com/gdeer81/marginalia
 
 ## Usage
 
