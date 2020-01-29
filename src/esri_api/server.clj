@@ -29,6 +29,10 @@
             [muuntaja.core :as m]
             [clojure.spec.alpha :as s]))
 
+;;; Handlers match the transformed query parameters to the requested views on
+;;; the data. Input validation and coercion has already been done at this point
+;;; by merit of helper libraries, in this case the reitit/muuntaja stacks.
+
 (defn buildings-handler
   "Handler for counting buildings by zip code"
   [{:keys [query-params]}]
@@ -43,21 +47,34 @@
                        (view/count-by-year zip)
                        (view/count-by-year))})
 
+;;; clojure.spec definitions which are used below. These translate to "there may
+;;; be a :zip key, which must be mapped to a string, if present". We can't use
+;;; number types for zip codes as they may be 0-padded, i.e. 00123 is a valid
+;;; code but not a valid number.
+
 (s/def ::zip string?)
 (s/def ::query-params (s/keys :opt-un [::zip]))
 
-(defn app-handler []
+(defn app-handler
+  "Return a ring handler for the application
+
+  This has been made a function so that handlers don't need to be re-evaluated
+  every time they are changed during development.
+
+  Swagger definitions are automatically generated from the data returned and the
+  route metadata contained within."
+  []
   (ring/ring-handler
     (ring/router
       [["/api/v1"
         ["/buildings" {:get {:handler buildings-handler
                              :summary "Number of buildings per zip code (optional filter)"
                              :coercion reitit.coercion.spec/coercion
-                             :parameters {:query ::query-params}}}]
+                             :parameters {:query ::query-params}}}] ; This is where we use the specs from above
         ["/buildings-by-year" {:get {:handler buildings-year-handler
                                      :summary "Distribution of buildings by year added, filtered by zip code (optional filter)"
                                      :coercion reitit.coercion.spec/coercion
-                                     :parameters {:query ::query-params}}}]]
+                                     :parameters {:query ::query-params}}}]] ; Likewise
        ["" {:no-doc true}
         ["/swagger.json" {:get (swagger/create-swagger-handler)
                           :swagger {:info {:title "Esri ArcGIS API"}}}]]]
@@ -67,6 +84,13 @@
     (ring/routes
       (swagger-ui/create-swagger-ui-handler {:path "/"})
       (ring/create-default-handler))))
+
+;;; Component-System boilerplate for handling the web server. Not absolutely
+;;; necessary, but makes development easier because the web server can easily be
+;;; restarted if routes change. The alternative would be to tie the routes to a
+;;; Var, but that comes with a performance penalty as the Var needs to be
+;;; resolved on every request. Also, adding other persistent global objects such
+;;; as database connections becomes much easier using this approach.
 
 (defrecord WebServer [port server]
   component/Lifecycle

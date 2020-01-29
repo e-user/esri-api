@@ -22,6 +22,8 @@
             [clojure.string :as string]
             [com.stuartsierra.component :as component]))
 
+;;; CLI boilerplate, super boring.
+
 (defn usage [options-summary]
   (format
     "Esri ArcGIS open data API

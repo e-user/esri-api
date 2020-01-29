@@ -21,6 +21,10 @@
             [java-time :refer [local-date-time]])
   (:import [java.util Date]))
 
+;;; Here, we are mostly concerned with importy raw CSV, transforming the input
+;;; into native hash maps and tranforming relevant time stamps into
+;;; corresponding Java objects we can use later.
+
 (defn import-csv
   "Import CSV resource"
   ([res]

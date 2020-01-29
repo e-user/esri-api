@@ -18,6 +18,10 @@
   "Data views"
   (:require [esri_api.data :as data]))
 
+;;; This is where the ingested CSV gets transformed to match the desired output
+;;; in the API. Clojure and applied Functional Programming often makes this look
+;;; trivial, at least in amount of code written.
+
 (def by-zip
   "Future of zipcode->[building]"
   (future (group-by :PLZ @data/csv)))
