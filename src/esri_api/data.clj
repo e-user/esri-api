@@ -18,7 +18,7 @@
   "Data import and transformation"
   (:require [clojure.data.csv :as csv]
             [clojure.java.io :as io]
-            [java-time :refer [local-date]])
+            [java-time :refer [local-date-time]])
   (:import [java.util Date]))
 
 (defn import-csv
@@ -29,9 +29,9 @@
   ([] (import-csv "Adressen__Berlin.csv")))
 
 (defn parse-date
-  "Parse date strings of the format `2008-01-28T00:00:00`"
+  "Parse date-time strings of the format `2008-01-28T00:00:00`"
   [s]
-  (local-date (java-time.format/formatter :iso-local-date-time) s))
+  (local-date-time (java-time.format/formatter :iso-local-date-time) s))
 
 (defn csv-data->maps
   "Transform raw CSV to hash maps
@@ -40,7 +40,7 @@
   [csv-data]
   (map (fn [keys vals]
          (-> (zipmap keys vals)
-           (update :STR_DATUM parse-date)))
+           (update :STR_DATUM (fn [v] (and v (parse-date v))))))
     (->> (first csv-data)
       (map keyword)
       repeat)

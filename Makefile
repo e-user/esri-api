@@ -24,7 +24,10 @@ target/esri-api.jar: resources aot-compile
 
 uberjar: target/esri-api.jar ## Build uberjar file
 
+test: ## Run all tests
+	@clojure -A:test -m esri_api.test
+
 clean: ## Remove generated files
 	@rm -rf classes target
 
-.PHONY: resources init aot-compile uberjar clean classes $(MAIN_CLASS) $(DEP_CLASSES)
+.PHONY: resources init aot-compile uberjar clean classes $(MAIN_CLASS) $(DEP_CLASSES) test
